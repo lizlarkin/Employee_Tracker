@@ -1,6 +1,19 @@
 const inquirer = require("inquirer");
 const mysql = require("mysql");
 
+// MySQL Connection
+const connection = mysql.createConnection({
+    host: "localhost",
+    port: 3306,
+    user: "root",
+    password: "password",
+    database: "employee_trackerDB",
+  });
+  connection.connect((err) => {
+    if (err) throw err;
+    // Start App
+    startApp();
+  });
 
 // Main Inquirer Structure
 const startApp = () => {
@@ -48,14 +61,13 @@ const startApp = () => {
                     break;
                 default:
                     connection.end();
-                    process.exit(0);
+                    process.exit(1);
                     break;
             }
         });
 };
 
-// Start App
-startApp();
+
 
 // Functions that run depending on action selected by user
 const addDepartment = () => {
@@ -96,5 +108,3 @@ const updateRoles = () => {
 const endApp = () => {
     console.log("Goodbye");
 }
-
-// mySQL 
