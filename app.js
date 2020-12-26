@@ -1,6 +1,8 @@
 const inquirer = require("inquirer");
 const mysql = require("mysql");
 
+
+// Main Inquirer Structure
 const startApp = () => {
     inquirer
         .prompt({
@@ -52,8 +54,10 @@ const startApp = () => {
         });
 };
 
+// Start App
 startApp();
 
+// Functions that run depending on action selected by user
 const addDepartment = () => {
     console.log("add department works");
     startApp();
@@ -92,3 +96,5 @@ const updateRoles = () => {
 const endApp = () => {
     console.log("Goodbye");
 }
+
+// mySQL 
