@@ -86,14 +86,28 @@ const addEmployee = () => {
 }
 
 const viewDepartments = () => {
-    console.log("view departments works");
+    const query =
+    "SELECT * FROM department"
+    connection.query(query, (err, data) => {
+        if (err) throw err;
+        data.forEach((item) => {
+          console.log(`Department ${item.department_id}: ${item.name}`);
+        });
     startApp();
-}
+    });
+};
 
 const viewRoles = () => {
-    console.log("view roles works");
+    const query =
+    "SELECT * FROM role"
+    connection.query(query, (err, data) => {
+        if (err) throw err;
+        data.forEach((item) => {
+          console.log(`Role ${item.role_id}: ${item.title} ($${item.salary} Annual Salary)`);
+        });
     startApp();
-}
+    });
+};
 
 const viewEmployees = () => {
     console.log("view employees works");
