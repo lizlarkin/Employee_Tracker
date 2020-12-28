@@ -1,5 +1,6 @@
 const inquirer = require("inquirer");
 const mysql = require("mysql");
+const cTable = require("console.table");
 
 // MySQL Connection
 const connection = mysql.createConnection({
@@ -90,9 +91,11 @@ const viewDepartments = () => {
     "SELECT * FROM department"
     connection.query(query, (err, data) => {
         if (err) throw err;
+        let deptData = [];
         data.forEach((item) => {
-          console.log(`Department ${item.department_id}: ${item.name}`);
-        });
+            deptData.push([item.department_id, item.name]);
+        })
+        console.table(['ID', 'Department'], deptData);
     startApp();
     });
 };
@@ -102,9 +105,11 @@ const viewRoles = () => {
     "SELECT * FROM role"
     connection.query(query, (err, data) => {
         if (err) throw err;
+        let roleData = [];
         data.forEach((item) => {
-          console.log(`Role ${item.role_id}: ${item.title} ($${item.salary} Annual Salary)`);
+          roleData.push([item.role_id, item.title, item.salary])
         });
+        console.table(['ID', 'Title', 'Salary'], roleData);
     startApp();
     });
 };
