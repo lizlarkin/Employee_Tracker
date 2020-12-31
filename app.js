@@ -61,19 +61,25 @@ const startApp = () => {
                     endApp();
                     break;
                 default:
-                    connection.end();
-                    process.exit(1);
+                    endApp();
                     break;
             }
         });
 };
 
 
-
 // Functions that run depending on action selected by user
 const addDepartment = () => {
-    console.log("add department works");
-    startApp();
+    inquirer
+    .prompt({
+      name: "newDept",
+      type: "input",
+      message: "Add New Department Name",
+    })
+    .then((userInput) => {
+      console.log(userInput.newDept);
+    });
+    // startApp();
 }
 
 const addRole = () => {
@@ -114,10 +120,25 @@ const viewRoles = () => {
     });
 };
 
+// Need to add manager
 const viewEmployees = () => {
-    console.log("view employees works");
+    let query = "SELECT employee_id, first_name, last_name, name, salary, employee.role_id, role.role_id, manager_id, title, role.department_id, department.department_id FROM employee INNER JOIN role ON employee.role_id = role.role_id INNER JOIN department ON role.department_id = department.department_id;"
+    connection.query(query, (err, data) => {
+        if (err) throw err;
+        let employeeData = [];
+        data.forEach((item) => {
+          employeeData.push([
+                item.employee_id, 
+                item.first_name, 
+                item.last_name,
+                item.title,
+                item.salary,
+                item.name])
+        });
+        console.table(['ID', 'First Name', 'Last Name', 'Title', 'Salary', 'Department'], employeeData);
     startApp();
-}
+});
+};
 
 const updateRoles = () => {
     console.log("update roles works");
@@ -126,4 +147,6 @@ const updateRoles = () => {
 
 const endApp = () => {
     console.log("Goodbye");
+    connection.end();
+    process.exit(0);
 }
