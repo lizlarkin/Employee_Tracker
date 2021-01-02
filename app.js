@@ -78,8 +78,11 @@ const addDepartment = () => {
     })
     .then((userInput) => {
       console.log(userInput.newDept);
-    });
-    // startApp();
+      connection.query(`INSERT INTO department (name) VALUE ("${userInput.newDept}")`, (err) => {
+          if (err) throw err;
+          startApp();
+      }) 
+    }); 
 }
 
 const addRole = () => {
