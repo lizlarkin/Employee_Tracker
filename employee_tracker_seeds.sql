@@ -51,3 +51,20 @@ INSERT INTO employee (first_name, last_name, role_id) VALUES ("Roy", "Anderson",
 SELECT * FROM department;
 SELECT * FROM role;
 SELECT * FROM employee;
+
+SELECT name, title
+FROM department
+INNER JOIN role
+ON department.department_id = role.role_id;
+
+SELECT employee_id, first_name, last_name, name, salary, employee.role_id, role.role_id, manager_id, title, role.department_id, department.department_id
+FROM employee
+INNER JOIN role
+ON employee.role_id = role.role_id
+INNER JOIN department
+ON role.department_id = department.department_id;
+ 
+SELECT a.employee_id, CONCAT(a.first_name, ' ', a.last_name) AS Employee, CONCAT(b.first_name, ' ', b.last_name) AS Manager 
+FROM employee a
+INNER JOIN employee b
+ON b.employee_ID = a.manager_id;

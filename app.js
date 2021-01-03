@@ -77,17 +77,58 @@ const addDepartment = () => {
       message: "Add New Department Name",
     })
     .then((userInput) => {
-      console.log(userInput.newDept);
+      console.log(`${userInput.newDept} added`);
       connection.query(`INSERT INTO department (name) VALUE ("${userInput.newDept}")`, (err) => {
           if (err) throw err;
           startApp();
       }) 
     }); 
 }
+// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^Need to add escape
 
 const addRole = () => {
-    console.log("add role works");
-    startApp();
+    
+    // Get department list
+    const query =
+    "SELECT * FROM department"
+    connection.query(query, (err, data) => {
+        if (err) throw err;
+        let deptList = [];
+        data.forEach((item) => {
+            deptList.push([item.department_id, item.name]);
+        });console.log(deptList);
+    });
+
+
+    // Gather User Data
+    inquirer
+    .prompt([
+        {
+        name: "newRole",
+        type: "input",
+        message: "Add New Title",
+        },
+        {
+        name: "newSalary",
+        type: "input",
+        message: "Add New Salary",
+        },
+        // {
+        // name: "deptAdd",
+        // type: "list",
+        // message: "Select Department to add Role to",
+        // choices: [deptList]
+        // }
+    ])
+    .then((userInput) => {
+      console.log(userInput.newRole);
+      console.log(userInput.newSalary);
+    //   console.log(userInput.deptAdd);
+    //   connection.query(`INSERT INTO role (title, salary, department_id) VALUES ("${userInput.newRole}","${userInput.newSalary}", "${userInput.deptID}")`, (err) => {
+    //       if (err) throw err;
+    //       startApp();
+    //   }) 
+    }); 
 }
 
 const addEmployee = () => {
@@ -123,25 +164,33 @@ const viewRoles = () => {
     });
 };
 
-// Need to add manager
 const viewEmployees = () => {
-    let query = "SELECT employee_id, first_name, last_name, name, salary, employee.role_id, role.role_id, manager_id, title, role.department_id, department.department_id FROM employee INNER JOIN role ON employee.role_id = role.role_id INNER JOIN department ON role.department_id = department.department_id;"
+    let query =
+    "SELECT a.employee_id, a.role_id, role.title, role.salary, role.role_id, department.name, department.department_id, CONCAT(a.first_name, ' ', a.last_name) AS Employee, CONCAT(b.first_name, ' ', b.last_name) AS Manager ";
+    query += "FROM employee a "
+    query += "LEFT JOIN role "
+    query += "ON a.role_id = role.role_id "
+    query += "LEFT JOIN department "
+    query += "ON role.department_id = department.department_id "
+    query += "LEFT JOIN employee b "
+    query += "ON b.employee_ID = a.manager_id;"
     connection.query(query, (err, data) => {
         if (err) throw err;
         let employeeData = [];
         data.forEach((item) => {
           employeeData.push([
                 item.employee_id, 
-                item.first_name, 
-                item.last_name,
+                item.Employee, 
                 item.title,
                 item.salary,
+                item.Manager,
                 item.name])
         });
-        console.table(['ID', 'First Name', 'Last Name', 'Title', 'Salary', 'Department'], employeeData);
+        console.table(['ID', 'Name', 'Title', 'Salary', 'Manager', 'Department'], employeeData);
     startApp();
 });
 };
+
 
 const updateRoles = () => {
     console.log("update roles works");
