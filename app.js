@@ -69,6 +69,7 @@ const startApp = () => {
 
 
 // Functions that run depending on action selected by user
+
 const addDepartment = () => {
     inquirer
     .prompt({
@@ -88,16 +89,16 @@ const addDepartment = () => {
 
 const addRole = () => {
     
-    // Get department list
+    // Get department list for use in department choices inquiry
+    let deptList = [];
+
     const query =
     "SELECT * FROM department"
     connection.query(query, (err, data) => {
         if (err) throw err;
-        let deptList = [];
-        data.forEach((item) => {
-            deptList.push([item.department_id, item.name]);
-        });console.log(deptList);
-    });
+        for (let i = 0; i < data.length; i++) {
+            deptList.push(data[i].department_id + " " + data[i].name); }
+        });
 
 
     // Gather User Data
@@ -113,21 +114,21 @@ const addRole = () => {
         type: "input",
         message: "Add New Salary",
         },
-        // {
-        // name: "deptAdd",
-        // type: "list",
-        // message: "Select Department to add Role to",
-        // choices: [deptList]
-        // }
+        {
+        name: "deptAdd",
+        type: "list",
+        message: "Select Department to add Role to",
+        choices: deptList,
+        }
     ])
     .then((userInput) => {
-      console.log(userInput.newRole);
-      console.log(userInput.newSalary);
-    //   console.log(userInput.deptAdd);
-    //   connection.query(`INSERT INTO role (title, salary, department_id) VALUES ("${userInput.newRole}","${userInput.newSalary}", "${userInput.deptID}")`, (err) => {
-    //       if (err) throw err;
-    //       startApp();
-    //   }) 
+      console.log(`Added ${userInput.newRole} Title with ${userInput.newSalary} Salary to ${userInput.deptAdd} Department`);
+      let deptID = userInput.deptAdd[0];
+      console.log(deptID);
+      connection.query(`INSERT INTO role (title, salary, department_id) VALUES ("${userInput.newRole}","${userInput.newSalary}", "${deptID}")`, (err) => {
+          if (err) throw err;
+          startApp();
+      }) 
     }); 
 }
 
