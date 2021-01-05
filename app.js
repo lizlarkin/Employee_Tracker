@@ -209,7 +209,6 @@ const addEmployee = () => {
       }) 
     }); 
 }
-// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^Need to add escape
 
 const viewDepartments = () => {
     const query =
@@ -268,8 +267,72 @@ const viewEmployees = () => {
 
 
 const updateRoles = () => {
-    console.log("update roles works");
-    startApp();
+
+        // Get title list for use in role choices inquiry
+        let titleList = [];
+
+        const query =
+        "SELECT * FROM role"
+        connection.query(query, (err, data) => {
+            if (err) throw err;
+            for (let i = 0; i < data.length; i++) {
+                titleList.push(data[i].role_id + " " + data[i].title); }
+            });       
+    
+        // Gather User Data
+        inquirer
+        .prompt([
+            {
+            name: "updateRole",
+            type: "list",
+            message: "Select item to update",
+            choices: ['title', 'salary'],
+            },
+            {
+            name: "titleChoice",
+            type: "list",
+            message: "Select title to update",
+            choices: titleList,
+            },
+            {
+            when: (response) => response.updateRole === 'salary',
+            name: "updateSalary",
+            type: "input",
+            message: "Input new salary",
+            },
+            {
+            when: (response) => response.updateRole === 'title',
+            name: "updateTitle",
+            type: "input",
+            message: "Input new title",
+            }
+        ])
+        .then((userInput) => {
+            let titleID = userInput.titleChoice[0];
+            console.log(titleID);
+            if (userInput.updateRole === 'salary') {
+                console.log(`Updated Salary to ${userInput.updateSalary}!`);
+                connection.query("UPDATE role SET salary = ? WHERE role_id = ?",
+                [userInput.updateSalary,
+                titleID
+                ],
+                (err) => {
+                if (err) throw err;
+                startApp();
+            });
+            } else {
+                console.log(`Updated Title to ${userInput.updateTitle}!`);
+                connection.query("UPDATE role SET title = ? WHERE role_id = ?",
+                [userInput.updateTitle,
+                titleID
+                ],
+                (err) => {
+                if (err) throw err;
+                startApp();
+            });
+            } 
+
+        });
 }
 
 const endApp = () => {
