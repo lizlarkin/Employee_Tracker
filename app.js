@@ -79,13 +79,14 @@ const addDepartment = () => {
     })
     .then((userInput) => {
       console.log(`Added ${userInput.newDept} Department!`);
-      connection.query(`INSERT INTO department (name) VALUE ("${userInput.newDept}")`, (err) => {
+      connection.query("INSERT INTO department (name) VALUE (?)",
+      [userInput.newDept],
+       (err) => {
           if (err) throw err;
           startApp();
       }) 
     }); 
 }
-// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^Need to add escape
 
 const addRole = () => {
     
@@ -124,13 +125,17 @@ const addRole = () => {
     .then((userInput) => {
       console.log(`Added ${userInput.newRole} Role!`);
       let deptID = userInput.deptAdd[0];
-      connection.query(`INSERT INTO role (title, salary, department_id) VALUES ("${userInput.newRole}","${userInput.newSalary}", "${deptID}")`, (err) => {
+      connection.query("INSERT INTO role (title, salary, department_id) VALUES (?,?,?)",
+        [userInput.newRole, 
+        userInput.newSalary, 
+        deptID
+        ],
+        (err) => {
           if (err) throw err;
           startApp();
       }) 
     }); 
 }
-// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^Need to add escape
 
 const addEmployee = () => {
     
@@ -191,10 +196,14 @@ const addEmployee = () => {
     .then((userInput) => {
       console.log(`Added ${userInput.newFirst} ${userInput.newLast}!`);
       let roleID = userInput.roleAdd[0];
-      console.log(roleID);
       let managerID = userInput.managerName[0];
-      console.log(managerID);
-      connection.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ("${userInput.newFirst}","${userInput.newLast}", "${roleID}", "${managerID}")`, (err) => {
+      connection.query("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)",
+            [userInput.newFirst,
+            userInput.newLast,
+            roleID,
+            managerID
+        ],
+          (err) => {
           if (err) throw err;
     startApp();
       }) 
