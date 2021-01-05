@@ -78,7 +78,7 @@ const addDepartment = () => {
       message: "Add New Department Name",
     })
     .then((userInput) => {
-      console.log(`${userInput.newDept} added`);
+      console.log(`Added ${userInput.newDept} Department!`);
       connection.query(`INSERT INTO department (name) VALUE ("${userInput.newDept}")`, (err) => {
           if (err) throw err;
           startApp();
@@ -122,20 +122,91 @@ const addRole = () => {
         }
     ])
     .then((userInput) => {
-      console.log(`Added ${userInput.newRole} Title with ${userInput.newSalary} Salary to ${userInput.deptAdd} Department`);
+      console.log(`Added ${userInput.newRole} Role!`);
       let deptID = userInput.deptAdd[0];
-      console.log(deptID);
       connection.query(`INSERT INTO role (title, salary, department_id) VALUES ("${userInput.newRole}","${userInput.newSalary}", "${deptID}")`, (err) => {
           if (err) throw err;
           startApp();
       }) 
     }); 
 }
+// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^Need to add escape
 
 const addEmployee = () => {
-    console.log("add employee works");
-    startApp();
+    
+    // Get role list for use in title choices inquiry
+    let roleList = [];
+
+    const queryA =
+    "SELECT * FROM role"
+    connection.query(queryA, (err, data) => {
+        if (err) throw err;
+        for (let i = 0; i < data.length; i++) {
+            roleList.push(data[i].role_id + " " + data[i].title); }
+        });
+
+    // Get employee list for use in manager choices inquiry
+    let employeeList = [];
+
+    const queryB =
+    "SELECT * FROM employee"
+    connection.query(queryB, (err, data) => {
+        if (err) throw err;
+        for (let i = 0; i < data.length; i++) {
+            employeeList.push(data[i].employee_id + " " + data[i].first_name + " " + data[i].last_name); }
+        });
+
+    // Gather User Data
+    inquirer
+    .prompt([
+        {
+        name: "newFirst",
+        type: "input",
+        message: "Add New First Name",
+        },
+        {
+        name: "newLast",
+        type: "input",
+        message: "Add New Last Name",
+        },
+        {
+        name: "roleAdd",
+        type: "list",
+        message: "Select Employee Title",
+        choices: roleList,
+        }, 
+        {
+        name: "addManager",
+        type: "confirm",
+        message: "Add Manager?",
+        }
+    ])
+    .then((response) => {
+        if(response.addManager === true) {
+            console.log("true")
+            inquirer
+            .prompt([
+                {
+                name: "managerName",
+                type: "list",
+                message: "Select Manager",
+                choices: employeeList
+                }
+            ])
+        }
+    })
+    .then((userInput) => {
+    //   console.log(`Added ${userInput.newFirst} ${userInput.newLast}!`);
+    //   let roleID = userInput.roleAdd[0];
+    //   let managerID = userInput.managerName[0];
+    //   connection.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ("${userInput.newFirst}","${userInput.newLast}", "${roleID}", "${userInput.newManager}")`, (err) => {
+    //       if (err) throw err;
+    // startApp();
+    //   }) 
+    console.log('done');
+    }); 
 }
+// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^Need to add escape
 
 const viewDepartments = () => {
     const query =
