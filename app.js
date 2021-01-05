@@ -179,31 +179,23 @@ const addEmployee = () => {
         name: "addManager",
         type: "confirm",
         message: "Add Manager?",
-        }
+        },
+        {
+        name: "managerName",
+        type: "list",
+        message: "Select Manager",
+        choices: employeeList,
+        when: (response) => response.addManager === true,
+        }, 
     ])
-    .then((response) => {
-        if(response.addManager === true) {
-            console.log("true")
-            inquirer
-            .prompt([
-                {
-                name: "managerName",
-                type: "list",
-                message: "Select Manager",
-                choices: employeeList
-                }
-            ])
-        }
-    })
     .then((userInput) => {
-    //   console.log(`Added ${userInput.newFirst} ${userInput.newLast}!`);
+      console.log(`Added ${userInput.newFirst} ${userInput.newLast}!`);
     //   let roleID = userInput.roleAdd[0];
     //   let managerID = userInput.managerName[0];
     //   connection.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ("${userInput.newFirst}","${userInput.newLast}", "${roleID}", "${userInput.newManager}")`, (err) => {
     //       if (err) throw err;
     // startApp();
     //   }) 
-    console.log('done');
     }); 
 }
 // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^Need to add escape
