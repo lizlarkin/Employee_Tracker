@@ -190,12 +190,14 @@ const addEmployee = () => {
     ])
     .then((userInput) => {
       console.log(`Added ${userInput.newFirst} ${userInput.newLast}!`);
-    //   let roleID = userInput.roleAdd[0];
-    //   let managerID = userInput.managerName[0];
-    //   connection.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ("${userInput.newFirst}","${userInput.newLast}", "${roleID}", "${userInput.newManager}")`, (err) => {
-    //       if (err) throw err;
-    // startApp();
-    //   }) 
+      let roleID = userInput.roleAdd[0];
+      console.log(roleID);
+      let managerID = userInput.managerName[0];
+      console.log(managerID);
+      connection.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ("${userInput.newFirst}","${userInput.newLast}", "${roleID}", "${managerID}")`, (err) => {
+          if (err) throw err;
+    startApp();
+      }) 
     }); 
 }
 // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^Need to add escape
