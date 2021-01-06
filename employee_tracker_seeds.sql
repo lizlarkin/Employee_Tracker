@@ -57,7 +57,7 @@ FROM department
 INNER JOIN role
 ON department.department_id = role.role_id;
 
-SELECT employee_id, first_name, last_name, name, salary, employee.role_id, role.role_id, manager_id, title, role.department_id, department.department_id
+SELECT employee_id, first_name, last_name, name, salary, employee.role_id, role.role_id, manager_id, role.title, role.department_id, department.department_id
 FROM employee
 INNER JOIN role
 ON employee.role_id = role.role_id
@@ -66,5 +66,18 @@ ON role.department_id = department.department_id;
  
 SELECT a.employee_id, CONCAT(a.first_name, ' ', a.last_name) AS Employee, CONCAT(b.first_name, ' ', b.last_name) AS Manager 
 FROM employee a
-INNER JOIN employee b
+LEFT JOIN employee b
 ON b.employee_ID = a.manager_id;
+
+SELECT a.employee_id, a.role_id, role.title, role.salary, role.role_id, department.name, department.department_id, CONCAT(a.first_name, ' ', a.last_name) AS Employee, CONCAT(b.first_name, ' ', b.last_name) AS Manager
+FROM employee a
+LEFT JOIN role
+ON a.role_id = role.role_id
+LEFT JOIN department
+ON role.department_id = department.department_id
+LEFT JOIN employee b
+ON b.employee_ID = a.manager_id;
+
+UPDATE role
+SET salary = 30000
+WHERE role_id = 7;
